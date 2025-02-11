@@ -1,0 +1,98 @@
+[
+  {
+    "name": "Rama Devi",
+    "title": "Technical Program Manager, Open Source Program Office, Comcast",
+    "image": "/images/people/profiles/rama.jpeg",
+    "bio": "???",
+    "connect": [
+      {
+        "name": "GitHub",
+        "link": "https://github.com/comcast"
+      },
+      {
+        "name": "Website",
+        "link": "http://comcast.github.io"
+      }
+      ]
+      },
+     {
+    "name": "Gale McCommons",
+    "title": "Technical Program Manager, Open Source Program Office, Comcast",
+    "image": "/images/people/profiles/gm_bw.jpeg",
+    "bio": "???",
+    "connect": [
+      {
+        "name": "GitHub",
+        "link": "https://github.com/galemccommons"
+      },
+      {
+        "name": "LinkedIn",
+        "link": "https://www.linkedin.com/in/gmccommons/"
+      },
+      {
+        "name": "Website",
+        "link": "http://comcast.github.io"
+     }
+     ]
+     },
+     {
+      "name": "Anusha Pavuluri",
+      "title": "Technical Program Manager, Open Source Program Office, Comcast",
+      "image": "/images/people/profiles/anusha.jpeg",
+      "bio": "???",
+      "connect": [
+        {
+          "name": "GitHub",
+          "link": "https://github.com/comcast"
+        },
+        {
+          "name": "LinkedIn",
+          "link": "https://www.linkedin.com/in/anusha-pavuluri/"
+        },
+        {
+          "name": "Website",
+          "link": "http://comcast.github.io"
+        }
+        ]
+        },
+     {
+    "name": "Shilla Saebi",
+    "title": "Technical Program Manager, Open Source Program Office, Comcast",
+    "image": "/images/people/profiles/shillasaebi.png",
+    "bio": "???",
+    "connect": [
+      {
+        "name": "GitHub",
+        "link": "https://github.com/shillasaebi"
+      },
+      {
+        "name": "Twitter",
+        "link": "https://twitter.com/shillasaebi"
+      },
+      {
+        "name": "LinkedIn",
+        "link": "https://www.linkedin.com/in/shilla-saebi-9a589633/"
+      }
+    ]
+  }, 
+  {
+    "name": "Chan Voong",
+    "title": "Technical Program Manager, Open Source Program Office, Comcast",
+    "image": "/images/people/profiles/chan_bw.jpeg",
+    "bio": "???",
+    "connect": [
+      {
+        "name": "GitHub",
+        "link": "https://github.com/voongc"
+      },
+      {
+        "name": "LinkedIn",
+        "link": "https://www.linkedin.com/in/chan-voong-pmp-45226049/"
+      },
+      {
+        "name": "Website",
+        "link": "http://comcast.github.io"
+      }
+      ]
+      }      
+]
