@@ -27,13 +27,13 @@ jobs:
         id: detect-package-manager
         run: |
           if [ -f "${{ github.workspace }}/yarn.lock" ]; then
-            echo "manager=yarn" >> $GITHUB_ENV
-            echo "command=install" >> $GITHUB_ENV
-            echo "runner=yarn" >> $GITHUB_ENV
+            echo "manager=yarn" >> $GITHUB_OUTPUT
+            echo "command=install" >> $GITHUB_OUTPUT
+            echo "runner=yarn" >> $GITHUB_OUTPUT
           elif [ -f "${{ github.workspace }}/package.json" ]; then
-            echo "manager=npm" >> $GITHUB_ENV
-            echo "command=ci" >> $GITHUB_ENV
-            echo "runner=npx --no-install" >> $GITHUB_ENV
+            echo "manager=npm" >> $GITHUB_OUTPUT
+            echo "command=ci" >> $GITHUB_OUTPUT
+            echo "runner=npx --no-install" >> $GITHUB_OUTPUT
           else
             echo "Unable to determine package manager"
             exit 1
@@ -43,33 +43,36 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: "20"
-          cache: ${{ env.manager }}
-
-      - name: Install dependencies
-        run: yarn install --frozen-lockfile
+          cache: ${{ steps.detect-package-manager.outputs.manager }}
 
       - name: Setup GitHub Pages
         uses: actions/configure-pages@v5
         with:
           static_site_generator: next
 
-      - name: Restore Next.js Cache
+      - name: Restore build cache
         uses: actions/cache@v4
         with:
           path: .next/cache
-          key: nextjs-${{ runner.os }}-${{ hashFiles('yarn.lock', 'package-lock.json') }}
-          restore-keys: nextjs-${{ runner.os }}-
+          key: ${{ runner.os }}-nextjs-${{ hashFiles('**/yarn.lock', '**/package-lock.json') }}-${{ hashFiles('**.[jt]s', '**.[jt]sx') }}
+          restore-keys: |
+            ${{ runner.os }}-nextjs-${{ hashFiles('**/yarn.lock', '**/package-lock.json') }}-
 
-      - name: Build with Next.js
-        run: yarn next build
+      - name: Install dependencies
+        run: yarn install || yarn install --no-lockfile
 
-      - name: Export static site
-        run: yarn next export -o out
+      - name: Build and Export Next.js
+        run: |
+          yarn next build
+          yarn next export -o out
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./out  # Ensuring correct output directory
+          path: ./out
+          name: github-pages
+          retention-days: 1
+          clean: false  # Prevents deletion issues
 
   deploy:
     environment:
