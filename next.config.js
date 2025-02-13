@@ -1,31 +1,26 @@
 const webpack = require('webpack');
 
 const isProd = process.env.NODE_ENV === 'production';
-const repoName = 'spider_ospo'; 
-const assetPrefix = isProd ? `/${repoName}` : '';
-const basePath = isProd ? `/${repoName}` : '';
+const repoName = 'spider_ospo'; // Your GitHub repo name
 
 module.exports = {
-  assetPrefix,
-  basePath,
+  assetPrefix: isProd ? `/${repoName}/` : '',
+  basePath: isProd ? `/${repoName}` : '',
   images: {
-    unoptimized: true, // Fixes <Image /> component issues on GitHub Pages
+    unoptimized: true, // Fixes <Image /> issues on GitHub Pages
   },
-  cssModules: true,
-  cssLoaderOptions: {
-    importLoaders: 1,
-    localIdentName: '[local]___[hash:base64:5]',
-    url: false,
-  },
-  webpack: (config) => {
+  webpack: (config, { isServer }) => {
+    // Define asset prefix for environment variables
     config.plugins.push(
       new webpack.DefinePlugin({
-        'process.env.ASSET_PREFIX': JSON.stringify(assetPrefix),
-      }),
+        'process.env.ASSET_PREFIX': JSON.stringify(isProd ? `/${repoName}/` : ''),
+      })
     );
 
+    // Resolve modules
     config.resolve.modules.push(__dirname);
 
+    // Fix SVG imports for React
     config.module.rules.push({
       test: /\.svg$/,
       use: [
@@ -33,9 +28,9 @@ module.exports = {
           loader: 'babel-loader',
         },
         {
-          loader: 'react-svg-loader',
+          loader: '@svgr/webpack',
           options: {
-            jsx: true, // true outputs JSX tags
+            icon: true,
           },
         },
       ],
