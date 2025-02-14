@@ -1,26 +1,24 @@
 const webpack = require('webpack');
 
 const isProd = process.env.NODE_ENV === 'production';
-const repoName = 'spider_ospo'; // Your GitHub repo name
+const repoName = 'spider_ospo';
 
 module.exports = {
-  assetPrefix: isProd ? `/${repoName}/` : '',
+  assetPrefix: isProd ? `/${repoName}` : '',
   basePath: isProd ? `/${repoName}` : '',
+  trailingSlash: true,
   images: {
-    unoptimized: true, // Fixes <Image /> issues on GitHub Pages
+    unoptimized: true,
   },
-  webpack: (config, { isServer }) => {
-    // Define asset prefix for environment variables
+  webpack: (config) => {
     config.plugins.push(
       new webpack.DefinePlugin({
-        'process.env.ASSET_PREFIX': JSON.stringify(isProd ? `/${repoName}/` : ''),
+        'process.env.ASSET_PREFIX': JSON.stringify(isProd ? `/${repoName}` : ''),
       })
     );
 
-    // Resolve modules
     config.resolve.modules.push(__dirname);
 
-    // Fix SVG imports for React
     config.module.rules.push({
       test: /\.svg$/,
       use: [
@@ -40,5 +38,11 @@ module.exports = {
   },
   devIndicators: {
     autoPrerender: false,
+  },
+  exportPathMap: async function () {
+    return {
+      '/': { page: '/' },
+      '/community': { page: '/community' },
+    };
   },
 };
