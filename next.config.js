@@ -1,5 +1,3 @@
-const webpack = require('webpack');
-
 const isProd = process.env.NODE_ENV === 'production';
 const repoName = 'spider_ospo';
 
@@ -11,36 +9,15 @@ module.exports = {
     unoptimized: true,
   },
   webpack: (config) => {
-    config.plugins.push(
-      new webpack.DefinePlugin({
-        'process.env.ASSET_PREFIX': JSON.stringify(isProd ? `/${repoName}` : ''),
-      })
-    );
-
     config.resolve.modules.push(__dirname);
-
-    config.module.rules.push({
-      test: /\.svg$/,
-      use: [
-        {
-          loader: 'babel-loader',
-        },
-        {
-          loader: '@svgr/webpack',
-          options: {
-            icon: true,
-          },
-        },
-      ],
-    });
-
     return config;
   },
   exportPathMap: async function () {
     return {
       '/': { page: '/' },
-      '/cybersecurity_research': { page: '/cybersecurity_research' },
+      '/projects': { page: '/projects' },
       '/community': { page: '/community' },
+      '/cybersecurity_research': { page: '/cybersecurity_research' },
     };
   },
 };
