@@ -36,12 +36,10 @@ module.exports = {
 
     return config;
   },
-  devIndicators: {
-    autoPrerender: false,
-  },
   exportPathMap: async function () {
     return {
       '/': { page: '/' },
+      '/cybersecurity_research': { page: '/cybersecurity_research' },
       '/community': { page: '/community' },
     };
   },
