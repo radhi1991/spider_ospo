@@ -1,9 +1,7 @@
 const webpack = require('webpack');
-const isProd = (process.env.NODE_ENV || 'production') === 'production';
-const assetPrefix = isProd ? '' : ''; //  <--- Important: Adjust if needed
 
 module.exports = {
-  assetPrefix, //  <--- Important: Adjust if needed
+  // Removed assetPrefix entirely
   cssModules: true,
   cssLoaderOptions: {
     importLoaders: 1,
@@ -11,11 +9,7 @@ module.exports = {
     url: false,
   },
   webpack: (config) => {
-    config.plugins.push(
-      new webpack.DefinePlugin({
-        'process.env.ASSET_PREFIX': JSON.stringify(assetPrefix),
-      }),
-    );
+    // Removed DefinePlugin related to assetPrefix
     config.resolve.modules.push(__dirname);
     config.module.rules.push({
       test: /\.svg$/,
