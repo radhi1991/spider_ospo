@@ -1,31 +1,56 @@
-const isProd = process.env.NODE_ENV === "production";
-const assetPrefix = isProd ? "/spider_ospo" : ""; // Replace with your repo name
+const webpack = require('webpack');
+// const path = require('path');
+const isProd = (process.env.NODE_ENV || 'production') === 'production';
+const assetPrefix = isProd ? '' : '';
 
 module.exports = {
-  reactStrictMode: true,
+  // future: {
+  //   webpack5: true,
+  // },
+  // node: {
+  //   __dirname: true,
+  //   __filename: true,
+  // },
+  // resolve: {
+  //   alias: {
+  //     src: path.resolve(__dirname, 'src'),
+  //     test: path.resolve(__dirname, 'test'),
+  //   },
+  // },
+  cssModules: true,
+  cssLoaderOptions: {
+    importLoaders: 1,
+    localIdentName: '[local]___[hash:base64:5]',
+    url: false,
+  },
+  // exportPathMap() {
+  //   return {
+  //     '/src/pages/': { page: '/' },
+  //     '/src/pages/blog': { page: '/blog' },
+  //     '/src/pages/community': { page: '/community' },
+  //     '/src/pages/events': { page: '/events' },
+  //     '/src/pages/people': { page: '/people' },
+  //     '/src/pages/projects': { page: '/projects' },
+  //   };
+  // },
   assetPrefix,
-
-  webpack: (config, { isServer }) => {
-    // Define ASSET_PREFIX environment variable
+  webpack: (config) => {
     config.plugins.push(
-      new (require("webpack")).DefinePlugin({
-        "process.env.ASSET_PREFIX": JSON.stringify(assetPrefix),
-      })
+      new webpack.DefinePlugin({
+        'process.env.ASSET_PREFIX': JSON.stringify(assetPrefix),
+      }),
     );
-
-    // Ensure the root directory is resolved properly
     config.resolve.modules.push(__dirname);
-
-    // Proper SVG handling using @svgr/webpack
     config.module.rules.push({
       test: /\.svg$/,
       use: [
         {
-          loader: "@svgr/webpack",
+          loader: 'babel-loader',
+        },
+        {
+          loader: 'react-svg-loader',
           options: {
-            svgo: false,
-            titleProp: true,
-            ref: true,
+            jsx: true, // true outputs JSX tags
           },
         },
       ],
@@ -33,17 +58,7 @@ module.exports = {
 
     return config;
   },
-
-  images: {
-    unoptimized: true, // Required for GitHub Pages (Next.js Image Optimization won't work)
-  },
-
   devIndicators: {
     autoPrerender: false,
-  },
-
-  experimental: {
-    // Ensures static HTML export works correctly
-    appDir: false,
   },
 };
