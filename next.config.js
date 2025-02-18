@@ -1,56 +1,31 @@
-const webpack = require('webpack');
-// const path = require('path');
-const isProd = (process.env.NODE_ENV || 'production') === 'production';
-const assetPrefix = isProd ? '' : '';
+const isProd = process.env.NODE_ENV === "production";
+const assetPrefix = isProd ? "/your-repo-name" : ""; // Replace with your repo name
 
 module.exports = {
-  // future: {
-  //   webpack5: true,
-  // },
-  // node: {
-  //   __dirname: true,
-  //   __filename: true,
-  // },
-  // resolve: {
-  //   alias: {
-  //     src: path.resolve(__dirname, 'src'),
-  //     test: path.resolve(__dirname, 'test'),
-  //   },
-  // },
-  cssModules: true,
-  cssLoaderOptions: {
-    importLoaders: 1,
-    localIdentName: '[local]___[hash:base64:5]',
-    url: false,
-  },
-  // exportPathMap() {
-  //   return {
-  //     '/src/pages/': { page: '/' },
-  //     '/src/pages/blog': { page: '/blog' },
-  //     '/src/pages/community': { page: '/community' },
-  //     '/src/pages/events': { page: '/events' },
-  //     '/src/pages/people': { page: '/people' },
-  //     '/src/pages/projects': { page: '/projects' },
-  //   };
-  // },
+  reactStrictMode: true,
   assetPrefix,
-  webpack: (config) => {
+
+  webpack: (config, { isServer }) => {
+    // Define ASSET_PREFIX environment variable
     config.plugins.push(
-      new webpack.DefinePlugin({
-        'process.env.ASSET_PREFIX': JSON.stringify(assetPrefix),
-      }),
+      new (require("webpack")).DefinePlugin({
+        "process.env.ASSET_PREFIX": JSON.stringify(assetPrefix),
+      })
     );
+
+    // Ensure the root directory is resolved properly
     config.resolve.modules.push(__dirname);
+
+    // Proper SVG handling using @svgr/webpack
     config.module.rules.push({
       test: /\.svg$/,
       use: [
         {
-          loader: 'babel-loader',
-        },
-        {
-          loader: 'react-svg-loader',
+          loader: "@svgr/webpack",
           options: {
-            jsx: true, // true outputs JSX tags
+            svgo: false,
+            titleProp: true,
+            ref: true,
           },
         },
       ],
@@ -58,7 +33,17 @@ module.exports = {
 
     return config;
   },
+
+  images: {
+    unoptimized: true, // Required for GitHub Pages (Next.js Image Optimization won't work)
+  },
+
   devIndicators: {
     autoPrerender: false,
+  },
+
+  experimental: {
+    // Ensures static HTML export works correctly
+    appDir: false,
   },
 };
