@@ -1,5 +1,5 @@
 const isProd = process.env.NODE_ENV === "production";
-const assetPrefix = isProd ? "/your-repo-name" : ""; // Replace with your repo name
+const assetPrefix = isProd ? "/spider_ospo" : ""; // Replace with your repo name
 
 module.exports = {
   reactStrictMode: true,
