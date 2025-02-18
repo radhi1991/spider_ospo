@@ -41,7 +41,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: "20"  # Or your preferred version
+          node-version: "20" # Or 16 if needed as a last resort
           cache: ${{ steps.detect-package-manager.outputs.manager }}
 
       - name: Setup GitHub Pages
@@ -58,17 +58,22 @@ jobs:
             ${{ runner.os }}-nextjs-${{ hashFiles('**/yarn.lock', '**/package-lock.json') }}-
 
       - name: Install dependencies
-        run: yarn install --frozen-lockfile # Or npm ci if using npm
+        run: |
+          rm -rf node_modules # Try cleaning node_modules first
+          yarn install --frozen-lockfile # Or npm ci
 
       - name: Build and Export Next.js
+        env:
+          NODE_OPTIONS: --openssl-legacy-provider # <-- Try this first
         run: |
+          echo $NODE_OPTIONS # Verify the env variable is set
           yarn next build
-          yarn next export -o out  # Export to the "out" directory
+          yarn next export -o out
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./out        # Upload the "out" directory
+          path: ./out
           name: github-pages
           retention-days: 1
           clean: false
