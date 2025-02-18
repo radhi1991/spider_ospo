@@ -64,12 +64,12 @@ jobs:
       - name: Build and Export Next.js
         run: |
           yarn next build
-          yarn next export -o docs  # Change to "public" if your repo uses that
+          yarn next export -o public  # Change to "docs" if your repo uses that
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./docs  # Change to "./public" if deploying there
+          path: ./public  # Change to "./docs" if deploying there
           name: github-pages
           retention-days: 1
           clean: false  # Prevents deletion issues
