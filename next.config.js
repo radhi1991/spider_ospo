@@ -1,16 +1,24 @@
 const webpack = require('webpack');
 
+const isProd = process.env.NODE_ENV === 'production';
+const repoName = 'spider_ospo';
+
 module.exports = {
-  // Removed assetPrefix entirely
-  cssModules: true,
-  cssLoaderOptions: {
-    importLoaders: 1,
-    localIdentName: '[local]___[hash:base64:5]',
-    url: false,
+  assetPrefix: isProd ? `/${repoName}` : '',
+  basePath: isProd ? `/${repoName}` : '',
+  trailingSlash: true,
+  images: {
+    unoptimized: true,
   },
   webpack: (config) => {
-    // Removed DefinePlugin related to assetPrefix
+    config.plugins.push(
+      new webpack.DefinePlugin({
+        'process.env.ASSET_PREFIX': JSON.stringify(isProd ? `/${repoName}` : ''),
+      })
+    );
+
     config.resolve.modules.push(__dirname);
+
     config.module.rules.push({
       test: /\.svg$/,
       use: [
@@ -18,9 +26,9 @@ module.exports = {
           loader: 'babel-loader',
         },
         {
-          loader: 'react-svg-loader',
+          loader: '@svgr/webpack',
           options: {
-            jsx: true,
+            icon: true,
           },
         },
       ],
@@ -30,5 +38,11 @@ module.exports = {
   },
   devIndicators: {
     autoPrerender: false,
+  },
+  exportPathMap: async function () {
+    return {
+      '/': { page: '/' },
+      '/community': { page: '/community' },
+    };
   },
 };
