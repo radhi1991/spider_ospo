@@ -1,47 +1,40 @@
 const webpack = require('webpack');
-const isProd = (process.env.NODE_ENV || 'production') === 'production';
-const assetPrefix = isProd ? '' : '';
+
+const isProd = process.env.NODE_ENV === 'production';
+const repoName = 'spider_ospo'; // Your GitHub repo name
 
 module.exports = {
-  cssModules: true,
-  cssLoaderOptions: {
-    importLoaders: 1,
-    localIdentName: '[local]___[hash:base64:5]',
-    url: false,
+  assetPrefix: isProd ? `/${repoName}/` : '',
+  basePath: isProd ? `/${repoName}` : '',
+  images: {
+    unoptimized: true, // Fixes <Image /> issues on GitHub Pages
   },
-  assetPrefix,
-  webpack: (config) => {
+  webpack: (config, { isServer }) => {
+    // Define asset prefix for environment variables
     config.plugins.push(
       new webpack.DefinePlugin({
-        'process.env.ASSET_PREFIX': JSON.stringify(assetPrefix),
-      }),
+        'process.env.ASSET_PREFIX': JSON.stringify(isProd ? `/${repoName}/` : ''),
+      })
     );
+
+    // Resolve modules
     config.resolve.modules.push(__dirname);
-    config.module.rules.push(
-      {
-        test: /\.svg$/,
-        use: [
-          {
-            loader: 'babel-loader',
-         : 'react-svg-loader',
-            options: {
-              jsx: true, // true outputs JSX tags
-            },
+
+    // Fix SVG imports for React
+    config.module.rules.push({
+      test: /\.svg$/,
+      use: [
+        {
+          loader: 'babel-loader',
+        },
+        {
+          loader: '@svgr/webpack',
+          options: {
+            icon: true,
           },
-        ],
-      },
-      {
-        test: /\.(png|jpe?g|gif)$/i,
-        use: [
-          {
-            loader: 'file-loader',
-            options: {
-              name: '[path][name].[ext]',
-            },
-          },
-        ],
-      }
-    );
+        },
+      ],
+    });
 
     return config;
   },
