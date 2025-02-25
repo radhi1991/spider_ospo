@@ -23,9 +23,7 @@ module.exports = {
         use: [
           {
             loader: 'babel-loader',
-          },
-          {
-            loader: 'react-svg-loader',
+         : 'react-svg-loader',
             options: {
               jsx: true, // true outputs JSX tags
             },
@@ -39,7 +37,13 @@ module.exports = {
             loader: 'file-loader',
             options: {
               name: '[path][name].[ext]',
-            return config;
+            },
+          },
+        ],
+      }
+    );
+
+    return config;
   },
   devIndicators: {
     autoPrerender: false,
